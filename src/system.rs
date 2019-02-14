@@ -1,13 +1,12 @@
-use sdl2::{
-    video::{Window, WindowBuilder},
-    Sdl, TimerSubsystem, VideoSubsystem,
-};
+use std::sync::{Arc, Mutex};
+
+use sdl2::{render::WindowCanvas, video::WindowBuilder, Sdl, TimerSubsystem, VideoSubsystem};
 
 pub struct System {
     sdl_context: Sdl,
     timer_subsystem: TimerSubsystem,
     video_subsystem: VideoSubsystem,
-    window: Window,
+    canvas: Arc<Mutex<WindowCanvas>>,
 }
 
 impl System {
@@ -19,16 +18,17 @@ impl System {
         let window = WindowBuilder::new(&video_subsystem, "pogChamp", 640, 480)
             .build()
             .unwrap();
+        let canvas = Arc::new(Mutex::new(window.into_canvas().build().map_err(|s| format!("{}", s))?));
 
         Ok(System {
             sdl_context,
             timer_subsystem,
             video_subsystem,
-            window,
+            canvas,
         })
     }
 
-    pub fn get_video_subsystem(&self) -> &VideoSubsystem {
-        &self.video_subsystem
+    pub fn get_canvas(&self) -> Arc<Mutex<WindowCanvas>> {
+        self.canvas.clone()
     }
 }

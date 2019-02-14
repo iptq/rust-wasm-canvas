@@ -1,11 +1,10 @@
 mod system;
 
 use std::os::raw;
-use std::sync::{Arc, Mutex};
 
 use failure::Error;
+use sdl2::pixels::Color;
 use ref_thread_local::{ref_thread_local, RefThreadLocal};
-use sdl2::video::WindowBuilder;
 
 use crate::system::System;
 
@@ -15,11 +14,16 @@ extern "C" {
 }
 
 ref_thread_local! {
-    static managed global_system: Arc<Mutex<System>> = Arc::new(Mutex::new(System::init().unwrap()));
+    static managed global_system: System = System::init().unwrap();
 }
 
 extern "C" fn main_loop() {
     let system = global_system.borrow();
+    let canvas = system.get_canvas();
+    let mut canvas = canvas.lock().unwrap();
+
+    canvas.set_draw_color(Color::RGB(0, 100, 200));
+    canvas.clear();
 }
 
 fn main() -> Result<(), Error> {
