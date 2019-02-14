@@ -23,9 +23,6 @@ extern "C" fn main_loop() {
 }
 
 fn main() -> Result<(), Error> {
-    let sdl_context = sdl2::init().unwrap();
-    let video_subsystem = sdl_context.video().unwrap();
-
     unsafe {
         use sdl2::sys::*;
         SDL_GL_SetAttribute(SDL_GLattr::SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -33,10 +30,6 @@ fn main() -> Result<(), Error> {
         SDL_GL_SetAttribute(SDL_GLattr::SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GLattr::SDL_GL_DEPTH_SIZE, 24);
     }
-
-    let window = WindowBuilder::new(&video_subsystem, "pogChamp", 640, 480)
-        .build()
-        .unwrap();
 
     unsafe {
         emscripten_set_main_loop(Some(main_loop), 0, 1);
