@@ -1,0 +1,10 @@
+[package]
+name = "rust-wasm-canvas"
+version = "0.1.0"
+authors = ["Michael Zhang <iptq@protonmail.com>"]
+edition = "2018"
+
+[dependencies]
+failure = "0.1"
+sdl2 = "0.32"
+ref_thread_local = "0.0"
